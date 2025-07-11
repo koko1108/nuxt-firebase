@@ -77,18 +77,24 @@
           class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
         >
           <div class="flex items-center space-x-2">
-            <a
+            <button
+              @click="handleLogout"
               class="rounded-md bg-teal-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-teal-700"
-              href="#"
+            >
+              Logout
+            </button>
+            <nuxt-link
+              to="/login"
+              class="rounded-md bg-teal-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-teal-700"
             >
               Login
-            </a>
-            <a
+            </nuxt-link>
+            <nuxt-link
+              to="/signup"
               class="hidden sm:block rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-teal-600 transition hover:bg-gray-200"
-              href="#"
             >
-              Register
-            </a>
+              Sign Up
+            </nuxt-link>
           </div>
         </div>
       </div>
@@ -112,7 +118,7 @@
           {{ item.text }}
         </NuxtLink>
 
-        <!-- Mobile auth buttons -->
+        <!-- Mobile auth buttons 
         <div class="mt-4 space-y-2">
           <a
             class="block w-full rounded-md bg-teal-600 px-3 py-2 text-center text-base font-medium text-white hover:bg-teal-700"
@@ -124,15 +130,17 @@
             class="block w-full rounded-md bg-gray-100 px-3 py-2 text-center text-base font-medium text-teal-600 hover:bg-gray-200"
             href="#"
           >
-            Register
+            Sign Up
           </a>
-        </div>
+        </div>-->
       </div>
     </div>
   </nav>
 </template>
 
 <script setup>
+import { useAuthStore } from "@/stores/auth";
+const authStore = useAuthStore();
 // 選單項目
 const menu = [
   {
@@ -164,6 +172,12 @@ const toggleMobileMenu = () => {
 // 關閉移動端選單
 const closeMobileMenu = () => {
   isMobileMenuOpen.value = false;
+};
+
+const handleLogout = async () => {
+  // console.log('before logout:', authStore.user)
+  await authStore.logout();
+  // console.log('after logout:', authStore.user)
 };
 
 onMounted(() => {

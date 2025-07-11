@@ -2,14 +2,15 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 export default defineNuxtPlugin(() => {
-  const config = useRuntimeConfig()
-  
+  const config = useRuntimeConfig();
+
   const firebaseConfig = {
     apiKey: config.public.firebaseApiKey,
     authDomain: config.public.firebaseAuthDomain,
@@ -26,11 +27,13 @@ export default defineNuxtPlugin(() => {
   const analytics = getAnalytics(app);
   // 初始化 Firestore 資料庫（NoSQL 文件資料庫）
   const db = getFirestore(app);
+  const auth = getAuth(app);
 
   return {
     provide: {
       firebaseApp: app,
       db,
+      auth
     },
   };
 });
