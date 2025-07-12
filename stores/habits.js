@@ -7,6 +7,8 @@ import {
   doc,
   updateDoc,
   deleteDoc,
+  query,
+  where,
 } from "firebase/firestore";
 import { format, differenceInDays } from "date-fns";
 
@@ -28,11 +30,16 @@ export const useHabitStore = defineStore("habitStore", () => {
   // Actions (普通函數)
   // fetching all habits
   async function fetchHabits() {
-    const { $db } = useNuxtApp();
+    const { $db, $auth } = useNuxtApp();
 
     try {
-      const querySnapshot = await getDocs(collection($db, "habits"));
-      habits.value = querySnapshot.docs.map((doc) => ({
+      const habitsQuery = query(
+        collection($db, "habits"),
+        where("userId", "==", $auth.currentUser.uid)
+      );
+
+      const snapshot = await getDocs(habitsQuery);
+      habits.value = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
@@ -45,12 +52,13 @@ export const useHabitStore = defineStore("habitStore", () => {
 
   // adding new habits
   async function addHabit(name) {
-    const { $db } = useNuxtApp();
+    const { $db, $auth } = useNuxtApp();
 
     const habit = {
       name,
       completions: [],
       streak: 0,
+      userId: $auth.currentUser.uid, // 確保習慣與當前用戶相關聯
     };
 
     try {
@@ -128,6 +136,7 @@ export const useHabitStore = defineStore("habitStore", () => {
 
     let streak = 0;
     let currentDate = new Date();
+    const today = new Date();
 
     for (const date of sortedDates) {
       const diff = differenceInDays(today, new Date(date));
@@ -141,6 +150,10 @@ export const useHabitStore = defineStore("habitStore", () => {
     }
 
     return streak;
+  }
+
+  function resetHabits() {
+    habits.value = [];
   }
 
   // 返回需要暴露的內容
@@ -159,5 +172,6 @@ export const useHabitStore = defineStore("habitStore", () => {
     deleteHabit,
     toggleCompletion,
     calculateStreak,
+    resetHabits,
   };
 });

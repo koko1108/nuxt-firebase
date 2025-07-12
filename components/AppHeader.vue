@@ -77,24 +77,28 @@
           class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
         >
           <div class="flex items-center space-x-2">
-            <button
-              @click="handleLogout"
-              class="rounded-md bg-teal-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-teal-700"
-            >
-              Logout
-            </button>
-            <nuxt-link
-              to="/login"
-              class="rounded-md bg-teal-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-teal-700"
-            >
-              Login
-            </nuxt-link>
-            <nuxt-link
-              to="/signup"
-              class="hidden sm:block rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-teal-600 transition hover:bg-gray-200"
-            >
-              Sign Up
-            </nuxt-link>
+            <HideFromGuest>
+              <button
+                @click="handleLogout"
+                class="rounded-md bg-teal-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-teal-700"
+              >
+                Logout
+              </button>
+            </HideFromGuest>
+            <HideFromUser>
+              <nuxt-link
+                to="/login"
+                class="rounded-md bg-teal-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-teal-700"
+              >
+                Login
+              </nuxt-link>
+              <nuxt-link
+                to="/signup"
+                class="hidden sm:block rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-teal-600 transition hover:bg-gray-200"
+              >
+                Sign Up
+              </nuxt-link>
+            </HideFromUser>
           </div>
         </div>
       </div>

@@ -7,9 +7,13 @@
 
 <script setup>
 import { useHabitStore } from "~/stores/habits";
+definePageMeta({
+  middleware: ['auth'], 
+})
 
 const habitStore = useHabitStore();
 await habitStore.fetchHabits();
+
 </script>
 
 <style scoped>

@@ -6,19 +6,23 @@ import {
   signInWithEmailAndPassword,
   onAuthStateChanged,
 } from "firebase/auth";
+import { useHabitStore } from '@/stores/habits'
 
 export const useAuthStore = defineStore("auth", () => {
-  user = ref(null);
-  loginError = ref(null);
-  signupError = ref(null);
+  const user = ref(null);
+  const loginError = ref(null);
+  const signupError = ref(null);
+  const initialAuthValueReady = ref(false);
 
+  // 監聽 Firebase Auth 狀態變化
   function setupAuthListener() {
     const { $auth } = useNuxtApp();
 
     if ($auth) {
-      onAuthStateChanged($auth, (user) => {
-        user.value = user || null;
+      onAuthStateChanged($auth, (firebaseUser) => {
+        user.value = firebaseUser || null;
         console.log("user state change:", user.value);
+        initialAuthValueReady.value = true;
       });
     } else {
       console.error("Firebase Auth is not initialized");
@@ -40,10 +44,11 @@ export const useAuthStore = defineStore("auth", () => {
   }
   // logout
   async function logout() {
-    const { $auth } = useNuxtApp();
+    const { $auth } = useNuxtApp()
+      const habitStore = useHabitStore()
 
-    await signOut($auth);
-    user.value = null;
+      await signOut($auth)
+      habitStore.resetHabits()
   }
 
   // login
@@ -64,7 +69,7 @@ export const useAuthStore = defineStore("auth", () => {
     user,
     loginError,
     signupError,
-
+    initialAuthValueReady,
     setupAuthListener,
     signup,
     logout,

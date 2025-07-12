@@ -3,7 +3,10 @@ export default defineNuxtConfig({
   compatibilityDate: "2025-05-15",
   devtools: { enabled: true },
   modules: ["@nuxt/icon", "@nuxtjs/tailwindcss", "@pinia/nuxt"],
-  
+  plugins: [
+    { src: '~/plugins/firebase.client.js', mode: 'client' },
+    { src: '~/plugins/authSetup.client.js', mode: 'client' }
+  ],
   runtimeConfig: {
     // Private keys (only available on server-side)
     // No private Firebase keys needed for client-side config
